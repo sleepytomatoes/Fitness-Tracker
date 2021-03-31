@@ -13,12 +13,8 @@ app.use(express.json());
 require("./routes/apiRoutes")(app);
 require("./routes/htmlRoutes")(app);
 
-// mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/dbWorkout", {
-//   useNewUrlParser: true
-// });
-
 mongoose.connect(
-  process.env.MONGODB_URI || 'mongodb://localhost/workouts',
+  process.env.MONGODB_URI || 'mongodb+srv://dbShaunaUser:mongoAppPass@cluster0.9d1be.mongodb.net/workouts',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
