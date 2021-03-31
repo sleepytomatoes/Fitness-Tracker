@@ -1,27 +1,61 @@
-const db = require("../models");
+const router = require("express").Router();
+const Workout = require("../models/Workout");
 
-module.exports = function(app) {
-  app.get("/api/workouts", function(req, res) {
-    db.Workout.find({}).then(function(dbWorkout) {
-      res.json(dbWorkout);
-    });
-  });
+// pulls all workouts from the db, renders the last workout onto the index.html page
 
-  app.post("/submit", ({ body }, res) => {
-    db.Workout.create(body)
-      .then(({ _id }) => db.Workout.findOneAndUpdate({}, { $push: { workouts: _id } }, { new: true }))
-      .then(dbWorkout => {
+router.get("/api/workouts", (req, res) => {
+
+    Workout.find({})
+     .then(dbWorkout => {
+         res.json(dbWorkout);
+     })
+     .catch(err => {
+         res.status(400).json(err);
+     });
+});
+
+// pulls all workouts from the db for the stats.html page
+
+router.get("/api/workouts/range", function(req, res) {
+
+    Workout.find({})
+    .then(dbWorkout => {
         res.json(dbWorkout);
-      })
-      .catch(err => {
-        res.json(err);
-      });
-  });
-  
+    })
+    .catch(err => {
+        res.status(400).json(err);
+    });
+});
 
-//   app.put("/api/workout/:id", function(req, res) {
-//     db.Image.updateOne({ _id: req.params.id }, { rating: req.body.rating }).then(function(dbImage) {
-//       res.json(dbImage);
-//     });
-//   });
-};
+// post request creates a new workout for db
+
+router.post("/api/workouts", ({ body }, res) => {
+
+    Workout.create(body)
+    .then(dbWorkout => {
+        res.json(dbWorkout);
+    })
+    .catch(err => {
+        res.status(400).json(err);
+    });
+});
+
+// put request adds a new exercise to last workout using id
+
+router.put("/api/workouts/:id", function(req, res) {
+
+    Workout.updateOne(
+        {
+            _id: req.params.id
+        },
+        {
+            $push: {
+                exercises: req.body
+            }
+        }
+    ).then(function(dbWorkout) {
+        res.json(dbWorkout);
+    });
+});
+
+module.exports = router;
