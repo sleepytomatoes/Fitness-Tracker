@@ -1,17 +1,16 @@
 const path = require("path");
+const router = require("express").Router()
 
-module.exports = function(app) {
-  app.get("*", function(req, res) {
+router.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "../public/index.html"));
-  });
+});
 
-// exercise route loads the exerxise.html page, where users can enter new workouts to the db
-  app.get('/exercise', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/exercise.html'));
-  });
+router.get("/exercise", function (req, res) {
+    res.sendFile(path.join(__dirname, "../public/exercise.html"));
+});
 
-// stats route loads the stats.html page, 
-  app.get('/stats', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/stats.html'));
-  });
-};
+router.get("/stats", function (req, res) {
+    res.sendFile(path.join(__dirname, "../public/stats.html"));
+});
+
+module.exports = router;
